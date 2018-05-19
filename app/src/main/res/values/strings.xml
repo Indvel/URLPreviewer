@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">URL 미리보기</string>
+    <string name="view">보기</string>
+    <string name="http">http://</string>
+</resources>
