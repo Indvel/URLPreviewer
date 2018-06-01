@@ -19,8 +19,7 @@
             android:ems="10"
             android:hint="@string/http"
             android:inputType="textWebEmailAddress"
-            android:maxLines="1"
-            android:text="@string/http"/>
+            android:maxLines="1"/>
 
         <Button
             android:id="@+id/button"

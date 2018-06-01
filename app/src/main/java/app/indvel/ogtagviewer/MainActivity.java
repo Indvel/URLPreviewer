@@ -11,8 +11,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     Bitmap bitmap;
     List<String> tags = new ArrayList();
     OGTask asyncTask;
+    int protocol = 0;
+    Menu menu;
 
     @Override
     protected void onStop() { //멈추었을때 다이어로그를 제거해주는 메서드
@@ -61,26 +63,6 @@ public class MainActivity extends AppCompatActivity {
         textTitle = (TextView) findViewById(R.id.textTitle);
         textDesc = (TextView) findViewById(R.id.textDesc);
         textUrl = (TextView) findViewById(R.id.textUrl);
-
-        editUrl.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if(!editable.toString().startsWith("http://") || editable.toString().startsWith("https://")) {
-                    editUrl.setText("http://");
-                    editUrl.setSelection(editUrl.getText().length());
-                }
-            }
-        });
     }
 
     public void onButtonClick(View v) {
@@ -92,6 +74,47 @@ public class MainActivity extends AppCompatActivity {
         } else {
             makeDialog("인터넷 연결 안됨","인터넷에 연결되어 있지 않습니다.");
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.protocol, menu);
+        this.menu = menu;
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.sel_protocol) {
+            switch(protocol) {
+                case 0:
+                    protocol = 1;
+                    menu.findItem(id).setTitle(getString(R.string.text_http));
+                    editUrl.setText(getString(R.string.http));
+                    editUrl.setSelection(editUrl.getText().length());
+                    break;
+                case 1:
+                    protocol = 2;
+                    menu.findItem(id).setTitle(getString(R.string.text_https));
+                    editUrl.setText(getString(R.string.https));
+                    editUrl.setSelection(editUrl.getText().length());
+                    break;
+                case 2:
+                    protocol = 0;
+                    menu.findItem(id).setTitle(getString(R.string.protocol));
+                    editUrl.setText("");
+                    break;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void makeDialog(String title, String content) {
